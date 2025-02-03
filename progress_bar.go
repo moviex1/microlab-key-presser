@@ -1,12 +1,5 @@
 package main
 
-// A simple example that shows how to render an animated progress bar. In this
-// example we bump the progress by 25% every two seconds, animating our
-// progress bar to its new target state.
-//
-// It's also possible to render a progress bar in a more static fashion without
-// transitions. For details on that approach see the progress-static example.
-
 import (
 	"strings"
 	"time"
@@ -18,28 +11,17 @@ import (
 
 const (
 	padding  = 2
-	maxWidth = 100
+	maxWidth = 80
 )
 
 var helpStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("#626262")).Render
-
-// func main() {
-// 	m := model{
-// 		progress: progress.New(progress.WithDefaultGradient()),
-// 	}
-
-// 	if _, err := tea.NewProgram(m).Run(); err != nil {
-// 		fmt.Println("Oh no!", err)
-// 		os.Exit(1)
-// 	}
-// }
 
 type tickMsg time.Time
 
 type progressBarModel struct {
 	progress         progress.Model
-	incrementPercent float64       // ceil(90 / 4)
-	delay            time.Duration // 440
+	incrementPercent float64
+	delay            time.Duration
 }
 
 func (m progressBarModel) Init() tea.Cmd {
@@ -66,7 +48,6 @@ func (m progressBarModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		cmd := m.progress.IncrPercent(m.incrementPercent)
 		return m, tea.Batch(tickCmd(m.delay), cmd)
 
-	// FrameMsg is sent when the progress bar wants to animate itself
 	case progress.FrameMsg:
 		progressModel, cmd := m.progress.Update(msg)
 		m.progress = progressModel.(progress.Model)
