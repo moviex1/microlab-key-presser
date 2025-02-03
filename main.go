@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"errors"
 	"fmt"
 	"os"
@@ -25,7 +26,7 @@ func main() {
 	microlabPID, err := findMicrolabPID()
 
 	if err != nil {
-		fmt.Println(textStyle(err.Error()))
+		fmt.Println(err.Error())
 		time.Sleep(time.Second * 5)
 
 		return
@@ -133,11 +134,19 @@ func filterPids(pids []int) []int {
 }
 
 func endProgram() {
-	m := spinnerModel{}
-	m.resetSpinner()
+	fmt.Print("🌎 If you like this program,\n you can give it a star on Github! ⭐️  \n https://github.com/moviex1/microlab-key-presser \n\n Enter Q to quit\n")
 
-	if _, err := tea.NewProgram(m).Run(); err != nil {
-		fmt.Println("could not run program:", err)
-		os.Exit(1)
+	scanner := bufio.NewScanner(os.Stdin)
+	for scanner.Scan() {
+		input := scanner.Text()
+
+		input = strings.TrimSpace(input)
+		input = strings.ToUpper(input)
+
+		if input == "Q" {
+			fmt.Println("Exiting program...")
+			break
+		}
 	}
+
 }
