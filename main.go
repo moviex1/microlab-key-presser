@@ -18,14 +18,14 @@ const (
 	MicrolabSave         = "."
 	MicrolabByteMode     = "0"
 	MicrolabRunMode      = "2"
-	KeyPressDelay        = 110 * time.Millisecond
+	KeyPressDelay        = 120 * time.Millisecond
 )
 
 func main() {
 	microlabPID, err := findMicrolabPID()
 
 	if err != nil {
-		fmt.Println(err.Error())
+		fmt.Println(textStyle(err.Error()))
 		time.Sleep(time.Second * 5)
 
 		return
@@ -41,6 +41,7 @@ func main() {
 	hexValues := parseEmuListing(listingInput)
 
 	emulateKeyPressing(hexValues, microlabPID)
+	endProgram()
 }
 
 func inputEmuListing() (string, error) {
@@ -129,4 +130,14 @@ func filterPids(pids []int) []int {
 	}
 
 	return result
+}
+
+func endProgram() {
+	m := spinnerModel{}
+	m.resetSpinner()
+
+	if _, err := tea.NewProgram(m).Run(); err != nil {
+		fmt.Println("could not run program:", err)
+		os.Exit(1)
+	}
 }
